@@ -19,6 +19,9 @@
         android:id="@+id/proximityToggleButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/medium"
+        android:backgroundTint="@color/theme"
+        android:textColor="@color/white"
         android:textOff="Start Proximity Data Collection"
         android:textOn="Stop Proximity Data Collection" />
 
@@ -27,6 +30,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginVertical="20dp"
+        android:fontFamily="@font/medium"
+        android:backgroundTint="@color/theme"
+        android:textColor="@color/white"
         android:textOff="Start Light Data Collection"
         android:textOn="Stop Light Data Collection" />
 
@@ -34,6 +40,9 @@
         android:id="@+id/geomagneticRotationVectorToggleButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/medium"
+        android:backgroundTint="@color/theme"
+        android:textColor="@color/white"
         android:textOff="Start Geomagnetic Data Collection"
         android:textOn="Stop Geomagnetic Data Collection" />
 
