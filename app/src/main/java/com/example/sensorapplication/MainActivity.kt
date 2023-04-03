@@ -19,17 +19,22 @@ import com.example.sensorapplication.databinding.ActivityMainBinding
 class MainActivity : AppCompatActivity(), SensorEventListener {
 
     private lateinit var binding: ActivityMainBinding
+
     private lateinit var sensorManager: SensorManager
     private lateinit var proximitySensor: Sensor
     private lateinit var lightSensor: Sensor
     private lateinit var geomagneticRotationVectorSensor: Sensor
+
     private lateinit var proximitySensorDataDao: ProximitySensorDataDao
     private lateinit var lightSensorDataDao: LightSensorDataDao
     private lateinit var geomagneticRotationVectorSensorDataDao: GeomagneticRotationVectorSensorDataDao
+
     private var isCollectingProximityData = false
     private var isCollectingLightData = false
     private var isCollectingGeomagneticData = false
-    private var orientationAngles: FloatArray? = null
+
+    private val rotationMatrix = FloatArray(9)
+    private val orientationAngles = FloatArray(3)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -157,11 +162,9 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                         geomagneticRotationVectorSensorDataDao.insert(data)
                         Log.i("GEOMAGNETIC DATA", geomagneticRotationVectorSensorDataDao.getAll().toString())
                     }.start()
-                    val rotationMatrix = FloatArray(9)
+
                     SensorManager.getRotationMatrixFromVector(rotationMatrix, event.values)
-                    val orientation = FloatArray(3)
-                    SensorManager.getOrientation(rotationMatrix, orientation)
-                    orientationAngles = orientation
+                    SensorManager.getOrientation(rotationMatrix, orientationAngles)
 
                     // Update UI with orientation feedback
                     updateOrientationFeedback()
