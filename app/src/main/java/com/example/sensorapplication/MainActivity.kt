@@ -8,14 +8,15 @@ import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.content.Context
 import android.util.Log
-import android.widget.ToggleButton
 import androidx.room.Room
 import com.example.sensorapplication.dao.GeomagneticRotationVectorSensorDataDao
 import com.example.sensorapplication.dao.LightSensorDataDao
 import com.example.sensorapplication.dao.ProximitySensorDataDao
+import com.example.sensorapplication.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity(), SensorEventListener {
 
+    private lateinit var binding: ActivityMainBinding
     private lateinit var sensorManager: SensorManager
     private lateinit var proximitySensor: Sensor
     private lateinit var lightSensor: Sensor
@@ -23,16 +24,16 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     private lateinit var proximitySensorDataDao: ProximitySensorDataDao
     private lateinit var lightSensorDataDao: LightSensorDataDao
     private lateinit var geomagneticRotationVectorSensorDataDao: GeomagneticRotationVectorSensorDataDao
-    private lateinit var proximityToggleButton: ToggleButton
-    private lateinit var lightToggleButton: ToggleButton
-    private lateinit var geomagneticRotationVectorToggleButton: ToggleButton
     private var isCollectingProximityData = false
     private var isCollectingLightData = false
     private var isCollectingGeomagneticData = false
+    private var orientationAngles: FloatArray? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
 
         // Initialize Room database and DAOs
         val db = Room.databaseBuilder(
@@ -51,8 +52,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         geomagneticRotationVectorSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GEOMAGNETIC_ROTATION_VECTOR)
 
         // Initialize toggle buttons
-        proximityToggleButton = findViewById(R.id.proximityToggleButton)
-        proximityToggleButton.setOnCheckedChangeListener { _, isChecked ->
+        binding.proximityToggleButton.setOnCheckedChangeListener { _, isChecked ->
             isCollectingProximityData = isChecked
             if (isChecked) {
                 sensorManager.registerListener(this, proximitySensor, SensorManager.SENSOR_DELAY_NORMAL)
@@ -61,8 +61,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
             }
         }
 
-        lightToggleButton = findViewById(R.id.lightToggleButton)
-        lightToggleButton.setOnCheckedChangeListener { _, isChecked ->
+        binding.lightToggleButton.setOnCheckedChangeListener { _, isChecked ->
             isCollectingLightData = isChecked
             if (isChecked) {
                 sensorManager.registerListener(this, lightSensor, SensorManager.SENSOR_DELAY_NORMAL)
@@ -71,8 +70,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
             }
         }
 
-        geomagneticRotationVectorToggleButton = findViewById(R.id.geomagneticRotationVectorToggleButton)
-        geomagneticRotationVectorToggleButton.setOnCheckedChangeListener { _, isChecked ->
+        binding.geomagneticRotationVectorToggleButton.setOnCheckedChangeListener { _, isChecked ->
             isCollectingGeomagneticData = isChecked
             if (isChecked) {
                 sensorManager.registerListener(this, geomagneticRotationVectorSensor, SensorManager.SENSOR_DELAY_NORMAL)
@@ -148,8 +146,35 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                         geomagneticRotationVectorSensorDataDao.insert(data)
                         Log.i("DATA", geomagneticRotationVectorSensorDataDao.getAll().toString())
                     }.start()
+                    val rotationMatrix = FloatArray(9)
+                    SensorManager.getRotationMatrixFromVector(rotationMatrix, event.values)
+                    val orientation = FloatArray(3)
+                    SensorManager.getOrientation(rotationMatrix, orientation)
+                    orientationAngles = orientation
+
+                    // Update UI with orientation feedback
+                    updateOrientationFeedback()
                 }
             }
+        }
+    }
+
+    private fun updateOrientationFeedback() {
+        if (orientationAngles != null) {
+            // Get the azimuth angle (in radians)
+            val azimuth = orientationAngles!![0]
+            // Convert radians to degrees
+            val azimuthDegrees = Math.toDegrees(azimuth.toDouble()).toFloat()
+            // Calculate the rotation needed to align with the earth's magnetic north pole
+            val rotationDegrees = (azimuthDegrees + 360) % 360
+            // Update UI with orientation feedback
+            var direction = ""
+            direction = if(rotationDegrees > 180){
+                "clockwise"
+            } else{
+                "counterclockwise"
+            }
+            binding.tvFeedbackText.text = "Rotate ${rotationDegrees.toInt()} degrees $direction to align with the earth's magnetic north pole."
         }
     }
 

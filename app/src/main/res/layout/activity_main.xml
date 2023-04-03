@@ -1,68 +1,40 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:gravity="center"
     tools:context=".MainActivity">
 
     <TextView
-        android:id="@+id/proximitySensorTextView"
+        android:id="@+id/tv_feedback_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Proximity Sensor Data:"
-        android:textSize="20sp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/lightSensorTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/proximitySensorTextView"
-        android:layout_marginTop="16dp"
-        android:text="Light Sensor Data:"
-        android:textSize="20sp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/geomagneticRotationVectorSensorTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/lightSensorTextView"
-        android:layout_marginTop="16dp"
-        android:text="Geomagnetic Rotation Vector Sensor Data:"
-        android:textSize="20sp"
-        android:textStyle="bold" />
+        android:layout_marginBottom="20dp"
+        android:textSize="14sp"
+        />
 
     <ToggleButton
         android:id="@+id/proximityToggleButton"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="16dp"
-        android:layout_marginTop="16dp"
-        android:textOff="Collect Proximity Data"
-        android:textOn="Stop Collecting Proximity Data" />
+        android:textOff="Start Proximity Data Collection"
+        android:textOn="Stop Proximity Data Collection" />
 
     <ToggleButton
         android:id="@+id/lightToggleButton"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/proximityToggleButton"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="16dp"
-        android:layout_marginTop="16dp"
-        android:textOff="Collect Light Data"
-        android:textOn="Stop Collecting Light Data" />
+        android:layout_marginVertical="20dp"
+        android:textOff="Start Light Data Collection"
+        android:textOn="Stop Light Data Collection" />
 
     <ToggleButton
         android:id="@+id/geomagneticRotationVectorToggleButton"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/lightToggleButton"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="16dp"
-        android:layout_marginTop="16dp"
-        android:textOff="Collect Geomagnetic Data"
-        android:textOn="Stop Collecting Geomagnetic Data" />
+        android:textOff="Start Geomagnetic Data Collection"
+        android:textOn="Stop Geomagnetic Data Collection" />
 
-</RelativeLayout>
+</LinearLayout>
