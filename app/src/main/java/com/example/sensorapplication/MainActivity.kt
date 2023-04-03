@@ -101,12 +101,11 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
     override fun onSensorChanged(event: SensorEvent) {
         val sensor = event.sensor
-        val timestamp = System.currentTimeMillis()
-
         // Check which sensor triggered and insert data into the appropriate Room database
         when (sensor.type) {
             Sensor.TYPE_PROXIMITY -> {
                 if(isCollectingProximityData) {
+                    val timestamp = System.currentTimeMillis()
                     val value = event.values[0]
                     // Check if proximity sensor triggered by placing phone near ear or covering phone with hand
                     if (value < proximitySensor.maximumRange) {
@@ -114,23 +113,26 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                         Thread {
                             val data = ProximitySensorData(timestamp = timestamp, value = value)
                             proximitySensorDataDao.insert(data)
-                            Log.i("DATA", proximitySensorDataDao.getAll().toString())
                         }.start()
+                        Log.i("PROXIMITY DATA", proximitySensorDataDao.getAll().toString())
                     }
                 }
             }
             Sensor.TYPE_LIGHT -> {
                 if(isCollectingLightData) {
+                    val timestamp = System.currentTimeMillis()
                     val value = event.values[0]
                     // Store light sensor data in Room database
                     Thread {
                         val data = LightSensorData(timestamp = timestamp, value = value)
                         lightSensorDataDao.insert(data)
                     }.start()
+                    Log.i("LIGHT DATA", proximitySensorDataDao.getAll().toString())
                 }
             }
             Sensor.TYPE_GEOMAGNETIC_ROTATION_VECTOR -> {
                 if(isCollectingGeomagneticData) {
+                    val timestamp = System.currentTimeMillis()
                     val x = event.values[0]
                     val y = event.values[1]
                     val z = event.values[2]
@@ -145,7 +147,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                             cos = cos
                         )
                         geomagneticRotationVectorSensorDataDao.insert(data)
-                        Log.i("DATA", geomagneticRotationVectorSensorDataDao.getAll().toString())
+                        Log.i("GEOMAGNETIC DATA", geomagneticRotationVectorSensorDataDao.getAll().toString())
                     }.start()
                     val rotationMatrix = FloatArray(9)
                     SensorManager.getRotationMatrixFromVector(rotationMatrix, event.values)
