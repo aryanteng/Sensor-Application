@@ -7,6 +7,7 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.content.Context
+import android.util.Log
 import android.widget.ToggleButton
 import androidx.room.Room
 import com.example.sensorapplication.dao.GeomagneticRotationVectorSensorDataDao
@@ -50,35 +51,35 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         geomagneticRotationVectorSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GEOMAGNETIC_ROTATION_VECTOR)
 
         // Initialize toggle buttons
-//        proximityToggleButton = findViewById(R.id.proximityToggleButton)
-//        proximityToggleButton.setOnCheckedChangeListener { _, isChecked ->
-//            isCollectingProximityData = isChecked
-//            if (isChecked) {
-//                sensorManager.registerListener(this, proximitySensor, SensorManager.SENSOR_DELAY_NORMAL)
-//            } else {
-//                sensorManager.unregisterListener(this, proximitySensor)
-//            }
-//        }
-//
-//        lightToggleButton = findViewById(R.id.lightToggleButton)
-//        lightToggleButton.setOnCheckedChangeListener { _, isChecked ->
-//            isCollectingLightData = isChecked
-//            if (isChecked) {
-//                sensorManager.registerListener(this, lightSensor, SensorManager.SENSOR_DELAY_NORMAL)
-//            } else {
-//                sensorManager.unregisterListener(this, lightSensor)
-//            }
-//        }
-//
-//        geomagneticRotationVectorToggleButton = findViewById(R.id.geomagneticRotationVectorToggleButton)
-//        geomagneticRotationVectorToggleButton.setOnCheckedChangeListener { _, isChecked ->
-//            isCollectingGeomagneticData = isChecked
-//            if (isChecked) {
-//                sensorManager.registerListener(this, geomagneticRotationVectorSensor, SensorManager.SENSOR_DELAY_NORMAL)
-//            } else {
-//                sensorManager.unregisterListener(this, geomagneticRotationVectorSensor)
-//            }
-//        }
+        proximityToggleButton = findViewById(R.id.proximityToggleButton)
+        proximityToggleButton.setOnCheckedChangeListener { _, isChecked ->
+            isCollectingProximityData = isChecked
+            if (isChecked) {
+                sensorManager.registerListener(this, proximitySensor, SensorManager.SENSOR_DELAY_NORMAL)
+            } else {
+                sensorManager.unregisterListener(this, proximitySensor)
+            }
+        }
+
+        lightToggleButton = findViewById(R.id.lightToggleButton)
+        lightToggleButton.setOnCheckedChangeListener { _, isChecked ->
+            isCollectingLightData = isChecked
+            if (isChecked) {
+                sensorManager.registerListener(this, lightSensor, SensorManager.SENSOR_DELAY_NORMAL)
+            } else {
+                sensorManager.unregisterListener(this, lightSensor)
+            }
+        }
+
+        geomagneticRotationVectorToggleButton = findViewById(R.id.geomagneticRotationVectorToggleButton)
+        geomagneticRotationVectorToggleButton.setOnCheckedChangeListener { _, isChecked ->
+            isCollectingGeomagneticData = isChecked
+            if (isChecked) {
+                sensorManager.registerListener(this, geomagneticRotationVectorSensor, SensorManager.SENSOR_DELAY_NORMAL)
+            } else {
+                sensorManager.unregisterListener(this, geomagneticRotationVectorSensor)
+            }
+        }
     }
 
     override fun onResume() {
@@ -114,6 +115,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                         Thread {
                             val data = ProximitySensorData(timestamp = timestamp, value = value)
                             proximitySensorDataDao.insert(data)
+                            Log.i("DATA", proximitySensorDataDao.getAll().toString())
                         }.start()
                     }
                 }
