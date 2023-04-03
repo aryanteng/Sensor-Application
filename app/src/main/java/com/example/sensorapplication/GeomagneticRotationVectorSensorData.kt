@@ -1,3 +1,5 @@
+package com.example.sensorapplication
+
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 

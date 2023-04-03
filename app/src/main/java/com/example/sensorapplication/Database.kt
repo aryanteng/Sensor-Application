@@ -1,8 +1,5 @@
 package com.example.sensorapplication
 
-import GeomagneticRotationVectorSensorData
-import LightSensorData
-import ProximitySensorData
 import androidx.room.Database
 import androidx.room.RoomDatabase
 

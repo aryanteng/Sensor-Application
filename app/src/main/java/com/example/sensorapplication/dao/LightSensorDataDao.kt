@@ -1,6 +1,6 @@
 package com.example.sensorapplication.dao
 
-import LightSensorData
+import com.example.sensorapplication.LightSensorData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert

@@ -1,6 +1,6 @@
 package com.example.sensorapplication.dao
 
-import ProximitySensorData
+import com.example.sensorapplication.ProximitySensorData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert

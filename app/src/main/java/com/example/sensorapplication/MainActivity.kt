@@ -1,8 +1,5 @@
 package com.example.sensorapplication
 
-import GeomagneticRotationVectorSensorData
-import LightSensorData
-import ProximitySensorData
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.hardware.Sensor
@@ -14,17 +11,16 @@ import androidx.room.Room
 import com.example.sensorapplication.dao.GeomagneticRotationVectorSensorDataDao
 import com.example.sensorapplication.dao.LightSensorDataDao
 import com.example.sensorapplication.dao.ProximitySensorDataDao
-import kotlin.math.sqrt
 
 class MainActivity : AppCompatActivity(), SensorEventListener {
 
     private lateinit var sensorManager: SensorManager
     private lateinit var proximitySensor: Sensor
     private lateinit var lightSensor: Sensor
-    private lateinit var geomagneticSensor: Sensor
+    private lateinit var geomagneticRotationVectorSensor: Sensor
     private lateinit var proximitySensorDataDao: ProximitySensorDataDao
     private lateinit var lightSensorDataDao: LightSensorDataDao
-    private lateinit var geomagneticSensorDataDao: GeomagneticRotationVectorSensorDataDao
+    private lateinit var geomagneticRotationVectorSensorDataDao: GeomagneticRotationVectorSensorDataDao
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,24 +29,25 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         // Initialize Room database and DAOs
         val db = Room.databaseBuilder(
             applicationContext,
-            Database::class.java, "sensor-data-db"
+            Database
+            ::class.java, "sensor-data-db"
         ).build()
         proximitySensorDataDao = db.proximitySensorDataDao()
         lightSensorDataDao = db.lightSensorDataDao()
-        geomagneticSensorDataDao = db.geomagneticRotationVectorSensorDataDao()
+        geomagneticRotationVectorSensorDataDao = db.geomagneticRotationVectorSensorDataDao()
 
         // Initialize sensors
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
         proximitySensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY)
         lightSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT)
-        geomagneticSensor = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)
+        geomagneticRotationVectorSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GEOMAGNETIC_ROTATION_VECTOR)
     }
 
     override fun onResume() {
         super.onResume()
         sensorManager.registerListener(this, proximitySensor, SensorManager.SENSOR_DELAY_NORMAL)
         sensorManager.registerListener(this, lightSensor, SensorManager.SENSOR_DELAY_NORMAL)
-        sensorManager.registerListener(this, geomagneticSensor, SensorManager.SENSOR_DELAY_NORMAL)
+        sensorManager.registerListener(this, geomagneticRotationVectorSensor, SensorManager.SENSOR_DELAY_NORMAL)
     }
 
     override fun onPause() {
@@ -59,32 +56,40 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     }
 
     override fun onSensorChanged(event: SensorEvent) {
-        val value = event.values[0]
+        val sensor = event.sensor
         val timestamp = System.currentTimeMillis()
 
-        when (event.sensor.type) {
+        // Check which sensor triggered and insert data into the appropriate Room database
+        when (sensor.type) {
             Sensor.TYPE_PROXIMITY -> {
+                val value = event.values[0]
                 // Check if proximity sensor triggered by placing phone near ear or covering phone with hand
                 if (value < proximitySensor.maximumRange) {
                     // Store proximity sensor data in Room database
-                    val data = ProximitySensorData(timestamp = timestamp, value = value)
-                    proximitySensorDataDao.insert(data)
+                    Thread {
+                        val data = ProximitySensorData(timestamp = timestamp, value = value)
+                        proximitySensorDataDao.insert(data)
+                    }.start()
                 }
             }
             Sensor.TYPE_LIGHT -> {
+                val value = event.values[0]
                 // Store light sensor data in Room database
-                val data = LightSensorData(timestamp = timestamp, value = value)
-                lightSensorDataDao.insert(data)
+                Thread {
+                    val data = LightSensorData(timestamp = timestamp, value = value)
+                    lightSensorDataDao.insert(data)
+                }.start()
             }
-            Sensor.TYPE_MAGNETIC_FIELD -> {
+            Sensor.TYPE_GEOMAGNETIC_ROTATION_VECTOR -> {
                 val x = event.values[0]
                 val y = event.values[1]
                 val z = event.values[2]
-                val cos = sqrt(x * x + y * y + z * z.toDouble()).toFloat()
-
+                val cos = event.values[3]
                 // Store geomagnetic sensor data in Room database
-                val data = GeomagneticRotationVectorSensorData(timestamp = timestamp, x = x, y = y, z = z, cos = cos)
-                geomagneticSensorDataDao.insert(data)
+                Thread {
+                    val data = GeomagneticRotationVectorSensorData(timestamp = timestamp, x = x, y = y, z = z, cos = cos)
+                    geomagneticRotationVectorSensorDataDao.insert(data)
+                }.start()
             }
         }
     }
@@ -93,3 +98,4 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         // Do nothing
     }
 }
+
