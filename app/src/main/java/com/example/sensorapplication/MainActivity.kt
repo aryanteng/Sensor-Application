@@ -76,6 +76,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                 sensorManager.registerListener(this, geomagneticRotationVectorSensor, SensorManager.SENSOR_DELAY_NORMAL)
             } else {
                 sensorManager.unregisterListener(this, geomagneticRotationVectorSensor)
+                binding.tvFeedbackText.text = ""
             }
         }
     }
@@ -174,7 +175,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
             } else{
                 "counterclockwise"
             }
-            binding.tvFeedbackText.text = "Rotate ${rotationDegrees.toInt()} degrees $direction to align with the earth's magnetic north pole."
+            binding.tvFeedbackText.text = "Rotate ${rotationDegrees.toInt()} Degrees $direction to align with the Magnetic North Pole."
         }
     }
 
