@@ -7,6 +7,7 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.content.Context
+import android.widget.ToggleButton
 import androidx.room.Room
 import com.example.sensorapplication.dao.GeomagneticRotationVectorSensorDataDao
 import com.example.sensorapplication.dao.LightSensorDataDao
@@ -21,6 +22,12 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     private lateinit var proximitySensorDataDao: ProximitySensorDataDao
     private lateinit var lightSensorDataDao: LightSensorDataDao
     private lateinit var geomagneticRotationVectorSensorDataDao: GeomagneticRotationVectorSensorDataDao
+    private lateinit var proximityToggleButton: ToggleButton
+    private lateinit var lightToggleButton: ToggleButton
+    private lateinit var geomagneticRotationVectorToggleButton: ToggleButton
+    private var isCollectingProximityData = false
+    private var isCollectingLightData = false
+    private var isCollectingGeomagneticData = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,13 +48,50 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         proximitySensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY)
         lightSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT)
         geomagneticRotationVectorSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GEOMAGNETIC_ROTATION_VECTOR)
+
+        // Initialize toggle buttons
+//        proximityToggleButton = findViewById(R.id.proximityToggleButton)
+//        proximityToggleButton.setOnCheckedChangeListener { _, isChecked ->
+//            isCollectingProximityData = isChecked
+//            if (isChecked) {
+//                sensorManager.registerListener(this, proximitySensor, SensorManager.SENSOR_DELAY_NORMAL)
+//            } else {
+//                sensorManager.unregisterListener(this, proximitySensor)
+//            }
+//        }
+//
+//        lightToggleButton = findViewById(R.id.lightToggleButton)
+//        lightToggleButton.setOnCheckedChangeListener { _, isChecked ->
+//            isCollectingLightData = isChecked
+//            if (isChecked) {
+//                sensorManager.registerListener(this, lightSensor, SensorManager.SENSOR_DELAY_NORMAL)
+//            } else {
+//                sensorManager.unregisterListener(this, lightSensor)
+//            }
+//        }
+//
+//        geomagneticRotationVectorToggleButton = findViewById(R.id.geomagneticRotationVectorToggleButton)
+//        geomagneticRotationVectorToggleButton.setOnCheckedChangeListener { _, isChecked ->
+//            isCollectingGeomagneticData = isChecked
+//            if (isChecked) {
+//                sensorManager.registerListener(this, geomagneticRotationVectorSensor, SensorManager.SENSOR_DELAY_NORMAL)
+//            } else {
+//                sensorManager.unregisterListener(this, geomagneticRotationVectorSensor)
+//            }
+//        }
     }
 
     override fun onResume() {
         super.onResume()
-        sensorManager.registerListener(this, proximitySensor, SensorManager.SENSOR_DELAY_NORMAL)
-        sensorManager.registerListener(this, lightSensor, SensorManager.SENSOR_DELAY_NORMAL)
-        sensorManager.registerListener(this, geomagneticRotationVectorSensor, SensorManager.SENSOR_DELAY_NORMAL)
+        if (isCollectingProximityData) {
+            sensorManager.registerListener(this, proximitySensor, SensorManager.SENSOR_DELAY_NORMAL)
+        }
+        if (isCollectingLightData) {
+            sensorManager.registerListener(this, lightSensor, SensorManager.SENSOR_DELAY_NORMAL)
+        }
+        if (isCollectingGeomagneticData) {
+            sensorManager.registerListener(this, geomagneticRotationVectorSensor, SensorManager.SENSOR_DELAY_NORMAL)
+        }
     }
 
     override fun onPause() {
@@ -62,40 +106,51 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         // Check which sensor triggered and insert data into the appropriate Room database
         when (sensor.type) {
             Sensor.TYPE_PROXIMITY -> {
-                val value = event.values[0]
-                // Check if proximity sensor triggered by placing phone near ear or covering phone with hand
-                if (value < proximitySensor.maximumRange) {
-                    // Store proximity sensor data in Room database
-                    Thread {
-                        val data = ProximitySensorData(timestamp = timestamp, value = value)
-                        proximitySensorDataDao.insert(data)
-                    }.start()
+                if(isCollectingProximityData) {
+                    val value = event.values[0]
+                    // Check if proximity sensor triggered by placing phone near ear or covering phone with hand
+                    if (value < proximitySensor.maximumRange) {
+                        // Store proximity sensor data in Room database
+                        Thread {
+                            val data = ProximitySensorData(timestamp = timestamp, value = value)
+                            proximitySensorDataDao.insert(data)
+                        }.start()
+                    }
                 }
             }
             Sensor.TYPE_LIGHT -> {
-                val value = event.values[0]
-                // Store light sensor data in Room database
-                Thread {
-                    val data = LightSensorData(timestamp = timestamp, value = value)
-                    lightSensorDataDao.insert(data)
-                }.start()
+                if(isCollectingLightData) {
+                    val value = event.values[0]
+                    // Store light sensor data in Room database
+                    Thread {
+                        val data = LightSensorData(timestamp = timestamp, value = value)
+                        lightSensorDataDao.insert(data)
+                    }.start()
+                }
             }
             Sensor.TYPE_GEOMAGNETIC_ROTATION_VECTOR -> {
-                val x = event.values[0]
-                val y = event.values[1]
-                val z = event.values[2]
-                val cos = event.values[3]
-                // Store geomagnetic sensor data in Room database
-                Thread {
-                    val data = GeomagneticRotationVectorSensorData(timestamp = timestamp, x = x, y = y, z = z, cos = cos)
-                    geomagneticRotationVectorSensorDataDao.insert(data)
-                }.start()
+                if(isCollectingGeomagneticData) {
+                    val x = event.values[0]
+                    val y = event.values[1]
+                    val z = event.values[2]
+                    val cos = event.values[3]
+                    // Store geomagnetic sensor data in Room database
+                    Thread {
+                        val data = GeomagneticRotationVectorSensorData(
+                            timestamp = timestamp,
+                            x = x,
+                            y = y,
+                            z = z,
+                            cos = cos
+                        )
+                        geomagneticRotationVectorSensorDataDao.insert(data)
+                    }.start()
+                }
             }
         }
     }
 
     override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {
-        // Do nothing
     }
 }
 
