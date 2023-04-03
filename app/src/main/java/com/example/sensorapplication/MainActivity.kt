@@ -7,6 +7,8 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.content.Context
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.util.Log
 import androidx.room.Room
 import com.example.sensorapplication.dao.GeomagneticRotationVectorSensorDataDao
@@ -52,29 +54,35 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         geomagneticRotationVectorSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GEOMAGNETIC_ROTATION_VECTOR)
 
         // Initialize toggle buttons
-        binding.proximityToggleButton.setOnCheckedChangeListener { _, isChecked ->
+        binding.togBtnProximity.setOnCheckedChangeListener { _, isChecked ->
             isCollectingProximityData = isChecked
             if (isChecked) {
+                binding.togBtnProximity.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#F44336"))
                 sensorManager.registerListener(this, proximitySensor, SensorManager.SENSOR_DELAY_NORMAL)
             } else {
+                binding.togBtnProximity.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#0B574A"))
                 sensorManager.unregisterListener(this, proximitySensor)
             }
         }
 
-        binding.lightToggleButton.setOnCheckedChangeListener { _, isChecked ->
+        binding.togBtnLight.setOnCheckedChangeListener { _, isChecked ->
             isCollectingLightData = isChecked
             if (isChecked) {
+                binding.togBtnLight.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#F44336"))
                 sensorManager.registerListener(this, lightSensor, SensorManager.SENSOR_DELAY_NORMAL)
             } else {
+                binding.togBtnLight.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#0B574A"))
                 sensorManager.unregisterListener(this, lightSensor)
             }
         }
 
-        binding.geomagneticRotationVectorToggleButton.setOnCheckedChangeListener { _, isChecked ->
+        binding.togBtnGeomagnetic.setOnCheckedChangeListener { _, isChecked ->
             isCollectingGeomagneticData = isChecked
             if (isChecked) {
+                binding.togBtnGeomagnetic.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#F44336"))
                 sensorManager.registerListener(this, geomagneticRotationVectorSensor, SensorManager.SENSOR_DELAY_NORMAL)
             } else {
+                binding.togBtnGeomagnetic.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#0B574A"))
                 sensorManager.unregisterListener(this, geomagneticRotationVectorSensor)
                 binding.tvFeedbackText.text = ""
             }

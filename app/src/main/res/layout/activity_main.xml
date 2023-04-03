@@ -12,11 +12,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
-        android:textSize="14sp"
+        android:fontFamily="@font/medium"
+        android:textSize="20sp"
+        android:textColor="@color/theme"
         />
 
     <ToggleButton
-        android:id="@+id/proximityToggleButton"
+        android:id="@+id/tog_btn_proximity"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="@font/medium"
@@ -26,7 +28,7 @@
         android:textOn="Stop Proximity Data Collection" />
 
     <ToggleButton
-        android:id="@+id/lightToggleButton"
+        android:id="@+id/tog_btn_light"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginVertical="20dp"
@@ -37,7 +39,7 @@
         android:textOn="Stop Light Data Collection" />
 
     <ToggleButton
-        android:id="@+id/geomagneticRotationVectorToggleButton"
+        android:id="@+id/tog_btn_geomagnetic"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="@font/medium"
