@@ -10,6 +10,7 @@ import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.util.Log
+import android.widget.Toast
 import androidx.room.Room
 import com.example.sensorapplication.dao.GeomagneticRotationVectorSensorDataDao
 import com.example.sensorapplication.dao.LightSensorDataDao
@@ -174,14 +175,16 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     }
 
     private fun updateOrientationFeedback() {
-        if (orientationAngles != null) {
-            // Get the azimuth angle (in radians)
-            val azimuth = orientationAngles!![0]
-            // Convert radians to degrees
-            val azimuthDegrees = Math.toDegrees(azimuth.toDouble()).toFloat()
-            // Calculate the rotation needed to align with the earth's magnetic north pole
-            val rotationDegrees = (azimuthDegrees + 360) % 360
-            // Update UI with orientation feedback
+        // Get the azimuth angle (in radians)
+        val azimuth = orientationAngles[0]
+        // Convert radians to degrees
+        val azimuthDegrees = Math.toDegrees(azimuth.toDouble()).toFloat()
+        // Calculate the rotation needed to align with the earth's magnetic north pole
+        val rotationDegrees = (azimuthDegrees + 360) % 360
+        // Update UI with orientation feedback
+        if (azimuthDegrees.toInt() == 0) {
+            Toast.makeText(this, "Success!", Toast.LENGTH_SHORT).show()
+        } else {
             var direction = ""
             direction = if(rotationDegrees > 180){
                 "clockwise"
