@@ -194,25 +194,28 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     }
 
     private fun updateOrientationFeedback() {
-        // Get the azimuth angle (in radians)
+        // Get the azimuth, pitch and roll angles (in radians)
         val azimuth = orientationAngles[0]
-        // Convert radians to degrees
-        val azimuthDegrees = Math.toDegrees(azimuth.toDouble()).toFloat()
-        // Calculate the rotation needed to align with the earth's magnetic north pole
-        val rotationDegrees = (azimuthDegrees + 360) % 360
-        // Update UI with orientation feedback
+        val pitch = orientationAngles[1]
+        val roll = orientationAngles[2]
 
-        if (azimuthDegrees.toInt() == 0) {
+        // Convert them to Degrees
+        val azimuthDegrees = Math.toDegrees(azimuth.toDouble()).toFloat()
+        val pitchDegrees = Math.toDegrees(pitch.toDouble()).toFloat()
+        val rollDegrees = Math.toDegrees(roll.toDouble()).toFloat()
+
+        // Calculate rotation required
+        val zRotation = (azimuthDegrees + 360) % 360
+        val xRotation = (-pitchDegrees + 360) % 360
+        val yRotation = (-rollDegrees + 360) % 360
+
+        if (azimuthDegrees.toInt() == 0 && pitchDegrees.toInt() == 0 && rollDegrees.toInt() == 0) {
             binding.tvGeomagneticFeedback.text = "Success!"
         } else {
-            var direction = ""
-            direction = if(rotationDegrees > 180){
-                "clockwise"
-            } else{
-                "counterclockwise"
-            }
-            binding.tvGeomagneticFeedback.text = "Rotate ${rotationDegrees.toInt()} Degrees $direction to align with the Magnetic North Pole."
+            val feedbackText = "Rotate:\n $zRotation degrees on Z-axis\n  $xRotation degrees on X-axis\n- $yRotation degrees on Y-axis\nto align with the Magnetic North Pole."
+            binding.tvGeomagneticFeedback.text = feedbackText
         }
+
     }
 
     override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {
