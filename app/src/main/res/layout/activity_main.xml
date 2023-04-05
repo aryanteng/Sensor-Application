@@ -8,7 +8,27 @@
     tools:context=".MainActivity">
 
     <TextView
-        android:id="@+id/tv_feedback"
+        android:id="@+id/tv_proximity_feedback"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:fontFamily="@font/medium"
+        android:textSize="20sp"
+        android:textColor="@color/theme"
+        />
+
+    <TextView
+        android:id="@+id/tv_light_feedback"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:fontFamily="@font/medium"
+        android:textSize="20sp"
+        android:textColor="@color/theme"
+        />
+
+    <TextView
+        android:id="@+id/tv_geomagnetic_feedback"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
