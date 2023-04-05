@@ -185,7 +185,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         val rotationDegrees = (azimuthDegrees + 360) % 360
         // Update UI with orientation feedback
         if (azimuthDegrees.toInt() == 0) {
-            Toast.makeText(this, "Success!", Toast.LENGTH_SHORT).show()
+            binding.tvFeedbackText.text = "Success!"
         } else {
             var direction = ""
             direction = if(rotationDegrees > 180){
