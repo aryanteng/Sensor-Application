@@ -212,7 +212,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         if (azimuthDegrees.toInt() == 0 && pitchDegrees.toInt() == 0 && rollDegrees.toInt() == 0) {
             binding.tvGeomagneticFeedback.text = "Success!"
         } else {
-            val feedbackText = "Rotate:\n $zRotation degrees on Z-axis\n  $xRotation degrees on X-axis\n- $yRotation degrees on Y-axis\nto align with the Magnetic North Pole."
+            val feedbackText = "Rotate:\n ${zRotation.toInt()} degrees on Z-axis\n  ${xRotation.toInt()} degrees on X-axis\n- ${yRotation.toInt()} degrees on Y-axis\nto align with the Magnetic North Pole."
             binding.tvGeomagneticFeedback.text = feedbackText
         }
 
