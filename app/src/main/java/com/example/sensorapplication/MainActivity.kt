@@ -10,7 +10,6 @@ import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.util.Log
-import android.widget.Toast
 import androidx.room.Room
 import com.example.sensorapplication.dao.GeomagneticRotationVectorSensorDataDao
 import com.example.sensorapplication.dao.LightSensorDataDao
@@ -47,7 +46,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         val db = Room.databaseBuilder(
             applicationContext,
             Database
-            ::class.java, "sensor-data-db"
+            ::class.java, "sensor-db"
         ).build()
         proximitySensorDataDao = db.proximitySensorDataDao()
         lightSensorDataDao = db.lightSensorDataDao()
@@ -90,7 +89,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
             } else {
                 binding.togBtnGeomagnetic.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#0B574A"))
                 sensorManager.unregisterListener(this, geomagneticRotationVectorSensor)
-                binding.tvFeedbackText.text = ""
+                binding.tvFeedback.text = ""
             }
         }
     }
@@ -123,6 +122,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                     val value = event.values[0]
                     // Check if proximity sensor triggered by placing phone near ear or covering phone with hand
                     if (value < proximitySensor.maximumRange) {
+                        binding.tvFeedback.text = "Distance = ${value}cm"
                         // Store proximity sensor data in Room database
                         Thread {
                             val data = ProximitySensorData(timestamp = timestamp, value = value)
@@ -137,6 +137,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                 if(isCollectingLightData) {
                     val timestamp = System.currentTimeMillis()
                     val value = event.values[0]
+                    binding.tvFeedback.text = "Illuminance = ${value}lx"
                     // Store light sensor data in Room database
                     Thread {
                         val data = LightSensorData(timestamp = timestamp, value = value)
@@ -184,8 +185,8 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         // Calculate the rotation needed to align with the earth's magnetic north pole
         val rotationDegrees = (azimuthDegrees + 360) % 360
         // Update UI with orientation feedback
-        if (azimuthDegrees.toInt() == 0) {
-            binding.tvFeedbackText.text = "Success!"
+        if (rotationDegrees.toInt() == 0) {
+            binding.tvFeedback.text = "Success!"
         } else {
             var direction = ""
             direction = if(rotationDegrees > 180){
@@ -193,7 +194,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
             } else{
                 "counterclockwise"
             }
-            binding.tvFeedbackText.text = "Rotate ${rotationDegrees.toInt()} Degrees $direction to align with the Magnetic North Pole."
+            binding.tvFeedback.text = "Rotate ${rotationDegrees.toInt()} Degrees $direction to align with the Magnetic North Pole."
         }
     }
 
