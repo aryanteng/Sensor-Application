@@ -127,8 +127,9 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                         Thread {
                             val data = ProximitySensorData(timestamp = timestamp, value = value)
                             proximitySensorDataDao.insert(data)
+                            Log.i("PROXIMITY DATA", proximitySensorDataDao.getAll().toString())
                         }.start()
-                        Log.i("PROXIMITY DATA", proximitySensorDataDao.getAll().toString())
+
                     }
                 }
             }
@@ -140,8 +141,9 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                     Thread {
                         val data = LightSensorData(timestamp = timestamp, value = value)
                         lightSensorDataDao.insert(data)
+                        Log.i("LIGHT DATA", lightSensorDataDao.getAll().toString())
                     }.start()
-                    Log.i("LIGHT DATA", proximitySensorDataDao.getAll().toString())
+
                 }
             }
             Sensor.TYPE_GEOMAGNETIC_ROTATION_VECTOR -> {
