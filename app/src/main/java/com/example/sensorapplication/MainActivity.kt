@@ -141,7 +141,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                         binding.tvProximityFeedback.text = "Distance = ${value}cm"
                         // Store proximity sensor data in Room database
                         Thread {
-                            val data = ProximitySensorData(timestamp = timestamp, value = value)
+                            val data = ProximitySensorData(timestamp = timestamp, distance = value)
                             proximitySensorDataDao.insert(data)
                             Log.i("PROXIMITY DATA", proximitySensorDataDao.getAll().toString())
                         }.start()
@@ -156,7 +156,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                     binding.tvLightFeedback.text = "Illuminance = ${value}lx"
                     // Store light sensor data in Room database
                     Thread {
-                        val data = LightSensorData(timestamp = timestamp, value = value)
+                        val data = LightSensorData(timestamp = timestamp, illuminance = value)
                         lightSensorDataDao.insert(data)
                         Log.i("LIGHT DATA", lightSensorDataDao.getAll().toString())
                     }.start()
@@ -201,7 +201,8 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         // Calculate the rotation needed to align with the earth's magnetic north pole
         val rotationDegrees = (azimuthDegrees + 360) % 360
         // Update UI with orientation feedback
-        if (rotationDegrees.toInt() == 0) {
+
+        if (azimuthDegrees.toInt() == 0) {
             binding.tvGeomagneticFeedback.text = "Success!"
         } else {
             var direction = ""

@@ -7,5 +7,5 @@ import androidx.room.PrimaryKey
 data class LightSensorData(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val timestamp: Long,
-    val value: Float
+    val illuminance: Float
 )

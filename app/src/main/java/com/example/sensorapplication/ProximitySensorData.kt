@@ -7,5 +7,5 @@ import androidx.room.PrimaryKey
 data class ProximitySensorData(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val timestamp: Long,
-    val value: Float
+    val distance: Float
 )
