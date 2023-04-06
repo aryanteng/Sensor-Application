@@ -45,7 +45,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         // Initialising Room Database
         val db = Room.databaseBuilder(
             applicationContext,
-            Database
+            SensorDatabase
             ::class.java, "sensor-db"
         ).build()
 
