@@ -204,16 +204,18 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         val pitchDegrees = Math.toDegrees(pitch.toDouble()).toFloat()
         val rollDegrees = Math.toDegrees(roll.toDouble()).toFloat()
 
-        // Calculate rotation required
-        val zRotation = (azimuthDegrees + 360) % 360
-        val xRotation = (-pitchDegrees + 360) % 360
-        val yRotation = (-rollDegrees + 360) % 360
-
         if (azimuthDegrees.toInt() == 0 && pitchDegrees.toInt() == 0 && rollDegrees.toInt() == 0) {
             binding.tvGeomagneticFeedback.text = "Success!"
             onPause()
         } else {
-            val feedbackText = "Rotate:\n ${zRotation.toInt()} degrees on Z-axis\n  ${xRotation.toInt()} degrees on X-axis\n- ${yRotation.toInt()} degrees on Y-axis\nto align with the Magnetic North Pole."
+            // Calculate rotation required
+            val zRotation = (azimuthDegrees + 360) % 360
+            val xRotation = (-pitchDegrees + 360) % 360
+            val yRotation = (-rollDegrees + 360) % 360
+            val feedbackText = "Rotate:\n ${xRotation.toInt()} degrees on X-axis\n " +
+                    " ${yRotation.toInt()} degrees on Y-axis\n" +
+                    " ${zRotation.toInt()} degrees on Z-axis\n" +
+                    "to align with the Magnetic North Pole."
             binding.tvGeomagneticFeedback.text = feedbackText
         }
     }
