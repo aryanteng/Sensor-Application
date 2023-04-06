@@ -130,16 +130,15 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
     override fun onSensorChanged(event: SensorEvent) {
         val sensor = event.sensor
-        // Check which sensor triggered and insert data into the appropriate Room database
         when (sensor.type) {
             Sensor.TYPE_PROXIMITY -> {
                 if(isCollectingProximityData) {
                     val timestamp = System.currentTimeMillis()
                     val value = event.values[0]
-                    // Check if proximity sensor triggered by placing phone near ear or covering phone with hand
+                    // If condition for checking if user places phone near their ear or cover the phone by hands.
                     if (value < proximitySensor.maximumRange) {
                         binding.tvProximityFeedback.text = "Distance = ${value}cm"
-                        // Store proximity sensor data in Room database
+                        // Storing the Proximity Sensor Data in the Room database
                         Thread {
                             val data = ProximitySensorData(timestamp = timestamp, distance = value)
                             proximitySensorDataDao.insert(data)
@@ -154,7 +153,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                     val timestamp = System.currentTimeMillis()
                     val value = event.values[0]
                     binding.tvLightFeedback.text = "Illuminance = ${value}lx"
-                    // Store light sensor data in Room database
+                    // Storing the Light Sensor Data in the Room Database
                     Thread {
                         val data = LightSensorData(timestamp = timestamp, illuminance = value)
                         lightSensorDataDao.insert(data)
@@ -170,7 +169,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                     val y = event.values[1]
                     val z = event.values[2]
                     val cos = event.values[3]
-                    // Store geomagnetic sensor data in Room database
+                    // Storing the Geomagnetic Sensor Data in the Room Database
                     Thread {
                         val data = GeomagneticRotationVectorSensorData(
                             timestamp = timestamp,
@@ -183,10 +182,11 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                         Log.i("GEOMAGNETIC DATA", geomagneticRotationVectorSensorDataDao.getAll().toString())
                     }.start()
 
+                    // Getting orientation angles as per Kotlin Documentation
                     SensorManager.getRotationMatrixFromVector(rotationMatrix, event.values)
                     SensorManager.getOrientation(rotationMatrix, orientationAngles)
 
-                    // Update UI with orientation feedback
+                    // Update the UI with the correct feedback
                     updateOrientationFeedback()
                 }
             }
