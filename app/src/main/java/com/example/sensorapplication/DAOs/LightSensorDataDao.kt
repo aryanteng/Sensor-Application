@@ -1,4 +1,4 @@
-package com.example.sensorapplication.dao
+package com.example.sensorapplication.DAOs
 
 import com.example.sensorapplication.LightSensorData
 import androidx.room.Dao
