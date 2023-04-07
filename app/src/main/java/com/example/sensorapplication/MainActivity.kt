@@ -64,12 +64,12 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         binding.togBtnProximity.setOnCheckedChangeListener { _, isChecked ->
             isCollectingProximityData = isChecked
             if (isChecked) {
-                // Start Sensor Listening
+                // Start the Proximity Sensor Listening
                 sensorManager.registerListener(this, proximitySensor, SensorManager.SENSOR_DELAY_NORMAL)
                 // Update UI
                 binding.togBtnProximity.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#F44336"))
             } else {
-                // Start Sensor Listening
+                // Stop the Proximity Sensor Listening
                 sensorManager.unregisterListener(this, proximitySensor)
                 // Update UI
                 binding.togBtnProximity.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#0B574A"))
@@ -80,12 +80,12 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         binding.togBtnLight.setOnCheckedChangeListener { _, isChecked ->
             isCollectingLightData = isChecked
             if (isChecked) {
-                // Start Sensor Listening
+                // Start the Light Sensor Listening
                 sensorManager.registerListener(this, lightSensor, SensorManager.SENSOR_DELAY_NORMAL)
                 // Update UI
                 binding.togBtnLight.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#F44336"))
             } else {
-                // Start Sensor Listening
+                // Stop the Sensor Listening
                 sensorManager.unregisterListener(this, lightSensor)
                 // Update UI
                 binding.togBtnLight.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#0B574A"))
@@ -96,12 +96,12 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         binding.togBtnGeomagnetic.setOnCheckedChangeListener { _, isChecked ->
             isCollectingGeomagneticData = isChecked
             if (isChecked) {
-                // Start Sensor Listening
+                // Start the Geomagnetic Sensor Listening
                 sensorManager.registerListener(this, geomagneticRotationVectorSensor, SensorManager.SENSOR_DELAY_NORMAL)
                 // Update UI
                 binding.togBtnGeomagnetic.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#F44336"))
             } else {
-                // Start Sensor Listening
+                // Stop the Geomagnetic Sensor Listening
                 sensorManager.unregisterListener(this, geomagneticRotationVectorSensor)
                 // Update UI
                 binding.togBtnGeomagnetic.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#0B574A"))
