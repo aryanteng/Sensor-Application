@@ -10,5 +10,6 @@ data class GeomagneticRotationVectorSensorData(
     val x: Float,
     val y: Float,
     val z: Float,
-    val cos: Float
+    val cos: Float,
+    val headingAccuracy: Float
 )

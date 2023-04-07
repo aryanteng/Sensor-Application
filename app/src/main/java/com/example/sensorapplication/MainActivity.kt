@@ -176,7 +176,8 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                             x = x,
                             y = y,
                             z = z,
-                            cos = cos
+                            cos = cos,
+                            headingAccuracy = event.values[4]
                         )
                         geomagneticRotationVectorSensorDataDao.insert(data)
                         Log.i("GEOMAGNETIC DATA", geomagneticRotationVectorSensorDataDao.getAll().toString())
