@@ -133,14 +133,13 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         when (sensor.type) {
             Sensor.TYPE_PROXIMITY -> {
                 if(isCollectingProximityData) {
-                    val timestamp = System.currentTimeMillis()
-                    val value = event.values[0]
+                    val distance = event.values[0]
                     // If condition for checking if user places phone near their ear or cover the phone by hands.
-                    if (value < proximitySensor.maximumRange) {
-                        binding.tvProximityFeedback.text = "Distance = ${value}cm"
+                    if (distance < proximitySensor.maximumRange) {
+                        binding.tvProximityFeedback.text = "Distance = ${distance}cm"
                         // Storing the Proximity Sensor Data in the Room database
                         Thread {
-                            val data = ProximitySensorData(timestamp = timestamp, distance = value)
+                            val data = ProximitySensorData(timestamp = System.currentTimeMillis(), distance = distance)
                             proximitySensorDataDao.insert(data)
                             Log.i("PROXIMITY DATA", proximitySensorDataDao.getAll().toString())
                         }.start()
@@ -150,12 +149,11 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
             }
             Sensor.TYPE_LIGHT -> {
                 if(isCollectingLightData) {
-                    val timestamp = System.currentTimeMillis()
-                    val value = event.values[0]
-                    binding.tvLightFeedback.text = "Illuminance = ${value}lx"
+                    val illuminance = event.values[0]
+                    binding.tvLightFeedback.text = "Illuminance = ${illuminance}lx"
                     // Storing the Light Sensor Data in the Room Database
                     Thread {
-                        val data = LightSensorData(timestamp = timestamp, illuminance = value)
+                        val data = LightSensorData(timestamp = System.currentTimeMillis(), illuminance = illuminance)
                         lightSensorDataDao.insert(data)
                         Log.i("LIGHT DATA", lightSensorDataDao.getAll().toString())
                     }.start()
@@ -164,19 +162,14 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
             }
             Sensor.TYPE_GEOMAGNETIC_ROTATION_VECTOR -> {
                 if(isCollectingGeomagneticData) {
-                    val timestamp = System.currentTimeMillis()
-                    val x = event.values[0]
-                    val y = event.values[1]
-                    val z = event.values[2]
-                    val cos = event.values[3]
                     // Storing the Geomagnetic Sensor Data in the Room Database
                     Thread {
                         val data = GeomagneticRotationVectorSensorData(
-                            timestamp = timestamp,
-                            x = x,
-                            y = y,
-                            z = z,
-                            cos = cos,
+                            timestamp = System.currentTimeMillis(),
+                            x = event.values[0],
+                            y = event.values[1],
+                            z = event.values[2],
+                            cos = event.values[3],
                             headingAccuracy = event.values[4]
                         )
                         geomagneticRotationVectorSensorDataDao.insert(data)
