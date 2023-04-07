@@ -201,7 +201,6 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
         if (azimuthDegrees.toInt() == 0 && pitchDegrees.toInt() == 0 && rollDegrees.toInt() == 0) {
             binding.tvGeomagneticFeedback.text = "Success!"
-            onPause()
         } else {
             // Calculate rotation required
             val zRotation = (azimuthDegrees + 360) % 360
