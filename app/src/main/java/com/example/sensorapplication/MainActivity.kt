@@ -150,14 +150,15 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
             Sensor.TYPE_LIGHT -> {
                 if(isCollectingLightData) {
                     val illuminance = event.values[0]
-                    binding.tvLightFeedback.text = "Illuminance = ${illuminance}lx"
-                    // Storing the Light Sensor Data in the Room Database
-                    Thread {
-                        val data = LightSensorData(timestamp = System.currentTimeMillis(), illuminance = illuminance)
-                        lightSensorDataDao.insert(data)
-                        Log.i("LIGHT DATA", lightSensorDataDao.getAll().toString())
-                    }.start()
-
+                    if(illuminance < 5){
+                        binding.tvLightFeedback.text = "Illuminance = ${illuminance}lx"
+                        // Storing the Light Sensor Data in the Room Database
+                        Thread {
+                            val data = LightSensorData(timestamp = System.currentTimeMillis(), illuminance = illuminance)
+                            lightSensorDataDao.insert(data)
+                            Log.i("LIGHT DATA", lightSensorDataDao.getAll().toString())
+                        }.start()
+                    }
                 }
             }
             Sensor.TYPE_GEOMAGNETIC_ROTATION_VECTOR -> {
