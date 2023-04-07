@@ -1,6 +1,6 @@
-package com.example.sensorapplication.DAOs
+package com.example.sensorapplication.dao
 
-import com.example.sensorapplication.GeomagneticRotationVectorSensorData
+import com.example.sensorapplication.models.GeomagneticRotationVectorSensorData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert

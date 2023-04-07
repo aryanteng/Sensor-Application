@@ -11,9 +11,12 @@ import android.content.res.ColorStateList
 import android.graphics.Color
 import android.util.Log
 import androidx.room.Room
-import com.example.sensorapplication.DAOs.GeomagneticRotationVectorSensorDataDao
-import com.example.sensorapplication.DAOs.LightSensorDataDao
-import com.example.sensorapplication.DAOs.ProximitySensorDataDao
+import com.example.sensorapplication.dao.GeomagneticRotationVectorSensorDataDao
+import com.example.sensorapplication.dao.LightSensorDataDao
+import com.example.sensorapplication.dao.ProximitySensorDataDao
+import com.example.sensorapplication.models.GeomagneticRotationVectorSensorData
+import com.example.sensorapplication.models.LightSensorData
+import com.example.sensorapplication.models.ProximitySensorData
 import com.example.sensorapplication.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity(), SensorEventListener {
