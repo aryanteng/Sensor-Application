@@ -144,7 +144,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                         Thread {
                             val data = ProximitySensorData(timestamp = System.currentTimeMillis(), distance = distance)
                             proximitySensorDataDao.insert(data)
-                            Log.i("PROXIMITY DATA", proximitySensorDataDao.getAll().toString())
+                            Log.i("PROXIMITY DATA", data.toString())
                         }.start()
 
                     }
@@ -159,7 +159,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                         Thread {
                             val data = LightSensorData(timestamp = System.currentTimeMillis(), illuminance = illuminance)
                             lightSensorDataDao.insert(data)
-                            Log.i("LIGHT DATA", lightSensorDataDao.getAll().toString())
+                            Log.i("LIGHT DATA", data.toString())
                         }.start()
                     }
                 }
@@ -177,7 +177,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                             headingAccuracy = event.values[4]
                         )
                         geomagneticRotationVectorSensorDataDao.insert(data)
-                        Log.i("GEOMAGNETIC DATA", geomagneticRotationVectorSensorDataDao.getAll().toString())
+                        Log.i("GEOMAGNETIC DATA", data.toString())
                     }.start()
 
                     // Getting orientation angles as per Kotlin Documentation
