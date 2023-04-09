@@ -179,7 +179,6 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                         cos = event.values[3],
                         headingAccuracy = event.values[4]
                     )
-                    Log.i("GEOMAGNETIC DATA", data.toString())
 
                     // Storing the Geomagnetic Sensor Data in the Room Database
                     Thread {
