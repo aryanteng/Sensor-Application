@@ -115,14 +115,14 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
     override fun onResume() {
         super.onResume()
-        if (isCollectingProximityData) {
-            sensorManager.registerListener(this, proximitySensor, SensorManager.SENSOR_DELAY_NORMAL)
+        if (isCollectingGeomagneticData) {
+            sensorManager.registerListener(this, geomagneticRotationVectorSensor, SensorManager.SENSOR_DELAY_NORMAL)
         }
         if (isCollectingLightData) {
             sensorManager.registerListener(this, lightSensor, SensorManager.SENSOR_DELAY_NORMAL)
         }
-        if (isCollectingGeomagneticData) {
-            sensorManager.registerListener(this, geomagneticRotationVectorSensor, SensorManager.SENSOR_DELAY_NORMAL)
+        if (isCollectingProximityData) {
+            sensorManager.registerListener(this, proximitySensor, SensorManager.SENSOR_DELAY_NORMAL)
         }
     }
 
@@ -137,47 +137,53 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
             Sensor.TYPE_PROXIMITY -> {
                 if(isCollectingProximityData) {
                     val distance = event.values[0]
-                    // If condition for checking if user places phone near their ear or cover the phone by hands.
+                    // Updating UI with feedback
+                    binding.tvProximityFeedback.text = "Distance = ${distance}cm"
+                    // Making a proximity sensor data model
+                    val data = ProximitySensorData(timestamp = System.currentTimeMillis(), distance = distance)
+                    // Log the data if user places phone near their ear or cover the phone by hands.
                     if (distance < proximitySensor.maximumRange) {
-                        binding.tvProximityFeedback.text = "Distance = ${distance}cm"
-                        // Storing the Proximity Sensor Data in the Room database
-                        Thread {
-                            val data = ProximitySensorData(timestamp = System.currentTimeMillis(), distance = distance)
-                            proximitySensorDataDao.insert(data)
-                            Log.i("PROXIMITY DATA", data.toString())
-                        }.start()
-
+                        Log.i("PROXIMITY DATA", data.toString())
                     }
+                    // Storing the Proximity Sensor Data in the Room database
+                    Thread {
+                        proximitySensorDataDao.insert(data)
+                    }.start()
                 }
             }
             Sensor.TYPE_LIGHT -> {
                 if(isCollectingLightData) {
                     val illuminance = event.values[0]
+                    // Updating UI with feedback
+                    binding.tvLightFeedback.text = "Illuminance = ${illuminance}lx"
+                    // Making a light sensor data model
+                    val data = LightSensorData(timestamp = System.currentTimeMillis(), illuminance = illuminance)
+                    // Log the data if user places phone near their ear or cover the phone by hands.
                     if(illuminance < 5){
-                        binding.tvLightFeedback.text = "Illuminance = ${illuminance}lx"
-                        // Storing the Light Sensor Data in the Room Database
-                        Thread {
-                            val data = LightSensorData(timestamp = System.currentTimeMillis(), illuminance = illuminance)
-                            lightSensorDataDao.insert(data)
-                            Log.i("LIGHT DATA", data.toString())
-                        }.start()
+                        Log.i("LIGHT DATA", data.toString())
                     }
+                    // Storing the Light Sensor Data in the Room Database
+                    Thread {
+                        lightSensorDataDao.insert(data)
+                    }.start()
                 }
             }
             Sensor.TYPE_GEOMAGNETIC_ROTATION_VECTOR -> {
                 if(isCollectingGeomagneticData) {
+                    // Making geomagnetic rotation vector data model
+                    val data = GeomagneticRotationVectorSensorData(
+                        timestamp = System.currentTimeMillis(),
+                        x = event.values[0],
+                        y = event.values[1],
+                        z = event.values[2],
+                        cos = event.values[3],
+                        headingAccuracy = event.values[4]
+                    )
+                    Log.i("GEOMAGNETIC DATA", data.toString())
+
                     // Storing the Geomagnetic Sensor Data in the Room Database
                     Thread {
-                        val data = GeomagneticRotationVectorSensorData(
-                            timestamp = System.currentTimeMillis(),
-                            x = event.values[0],
-                            y = event.values[1],
-                            z = event.values[2],
-                            cos = event.values[3],
-                            headingAccuracy = event.values[4]
-                        )
                         geomagneticRotationVectorSensorDataDao.insert(data)
-                        Log.i("GEOMAGNETIC DATA", data.toString())
                     }.start()
 
                     // Getting orientation angles as per Kotlin Documentation
@@ -185,13 +191,13 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                     SensorManager.getOrientation(rotationMatrix, orientationAngles)
 
                     // Update the UI with the correct feedback
-                    updateOrientationFeedback()
+                    updateUiWithFeedback()
                 }
             }
         }
     }
 
-    private fun updateOrientationFeedback() {
+    private fun updateUiWithFeedback() {
         // Get the azimuth, pitch and roll angles (in radians)
         val azimuth = orientationAngles[0]
         val pitch = orientationAngles[1]
