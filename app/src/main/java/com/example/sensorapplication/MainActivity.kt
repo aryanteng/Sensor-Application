@@ -179,16 +179,13 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                         cos = event.values[3],
                         headingAccuracy = event.values[4]
                     )
-
                     // Storing the Geomagnetic Sensor Data in the Room Database
                     Thread {
                         geomagneticRotationVectorSensorDataDao.insert(data)
                     }.start()
-
                     // Getting orientation angles as per Kotlin Documentation
                     SensorManager.getRotationMatrixFromVector(rotationMatrix, event.values)
                     SensorManager.getOrientation(rotationMatrix, orientationAngles)
-
                     // Update the UI with the correct feedback
                     updateUiWithFeedback()
                 }
