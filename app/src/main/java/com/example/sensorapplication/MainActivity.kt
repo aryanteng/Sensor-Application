@@ -142,7 +142,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                     // Making a proximity sensor data model
                     val data = ProximitySensorData(timestamp = System.currentTimeMillis(), distance = distance)
                     // Log the data if user places phone near their ear or cover the phone by hands.
-                    if (distance < proximitySensor.maximumRange) {
+                    if (distance < 2) {
                         Log.i("PROXIMITY DATA", data.toString())
                     }
                     // Storing the Proximity Sensor Data in the Room database
